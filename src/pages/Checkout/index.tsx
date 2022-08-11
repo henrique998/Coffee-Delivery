@@ -34,7 +34,7 @@ import { useForm } from 'react-hook-form'
 import { Input } from '../../components/Input'
 import toast from 'react-hot-toast'
 
-type PaymenMethod = 'credit_card' | 'debit_card' | 'money'
+export type PaymenMethod = 'credit' | 'debit' | 'money'
 
 const CartDelivery = 3.5
 
@@ -73,7 +73,12 @@ export function Checkout() {
 
     localStorage.removeItem('coffeeDelivery:cart')
 
-    navigate('/success')
+    navigate('/success', {
+      state: {
+        ...data,
+        paymentMethod,
+      },
+    })
   }
 
   const { errors } = formState
@@ -162,16 +167,16 @@ export function Checkout() {
 
             <PaymentoOptionsBox>
               <PaymentoOption
-                onClick={() => setPaymentMethod('credit_card')}
-                isActive={paymentMethod === 'credit_card'}
+                onClick={() => setPaymentMethod('credit')}
+                isActive={paymentMethod === 'credit'}
               >
                 <CreditCard size={16} />
                 <label>Cartão de crédito</label>
               </PaymentoOption>
 
               <PaymentoOption
-                onClick={() => setPaymentMethod('debit_card')}
-                isActive={paymentMethod === 'debit_card'}
+                onClick={() => setPaymentMethod('debit')}
+                isActive={paymentMethod === 'debit'}
               >
                 <Bank size={16} />
                 <label>Cartão de débito</label>

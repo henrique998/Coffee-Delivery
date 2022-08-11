@@ -127,7 +127,7 @@ interface PaymentoOptionProps {
   isActive: boolean
 }
 
-export const PaymentoOption = styled.div<PaymentoOptionProps>`
+export const PaymentoOption = styled.button<PaymentoOptionProps>`
   padding: 1rem;
   background-color: ${(props) => props.theme['gray-300']};
   border-radius: 6px;

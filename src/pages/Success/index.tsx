@@ -1,7 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { CurrencyDollar, MapPin, Timer } from 'phosphor-react'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { ThemeContext } from 'styled-components'
 import deliverymanImg from '../../assets/deliveryman.svg'
+import { PaymenMethod } from '../Checkout'
 
 import {
   SuccessContainer,
@@ -10,8 +13,39 @@ import {
   SuccessInfoBox,
 } from './styles'
 
+type LocationType = {
+  state: {
+    street: string
+    number: string
+    district: string
+    city: string
+    uf: string
+    paymentMethod: PaymenMethod
+  }
+}
+
+const paymentMethods = {
+  credit: 'Cartão de crédito',
+  debit: 'Cartão de débito',
+  money: 'Dinheiro',
+}
+
 export function Success() {
   const { purple, yellow, 'yellow-dark': yellowDark } = useContext(ThemeContext)
+
+  const navigate = useNavigate()
+
+  const { state } = useLocation() as unknown as LocationType
+
+  useEffect(() => {
+    if (!state) {
+      navigate('/')
+    }
+  }, [])
+
+  if (!state) {
+    return <></>
+  }
 
   return (
     <SuccessContainer>
@@ -25,8 +59,12 @@ export function Success() {
               <MapPin size={16} weight={'fill'} />
             </IconContainer>
             <span>
-              Entrega em <strong>Rua João Daniel Martinelli, 102</strong> <br />
-              Farrapos - Porto Alegre, RS
+              Entrega em{' '}
+              <strong>
+                {state.street}, {state.number}
+              </strong>{' '}
+              <br />
+              {state.district} - {state.city}, {state.uf.toUpperCase()}
             </span>
           </li>
 
@@ -48,7 +86,8 @@ export function Success() {
             </IconContainer>
             <div>
               <span>
-                Pagamento na entrega <br /> <strong> Cartão de Crédito</strong>
+                Pagamento na entrega <br />{' '}
+                <strong> {paymentMethods[state.paymentMethod]}</strong>
               </span>
             </div>
           </li>
